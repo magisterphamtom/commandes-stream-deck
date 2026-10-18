@@ -21,5 +21,11 @@
   "download": "https://github.com/magisterphamtom/commandes-stream-deck/releases/download/v1.0.0/module.zip",
   "license": "https://github.com/magisterphamtom/commandes-stream-deck/blob/main/LICENSE",
   "bugs": "https://github.com/magisterphamtom/commandes-stream-deck/issues",
-  "readme": "https://github.com/magisterphamtom/commandes-stream-deck/blob/main/README.md"
+  "readme": "https://github.com/magisterphamtom/commandes-stream-deck/blob/main/README.md",
+  "media": [
+    {
+      "type": "cover",
+      "url": "https://raw.githubusercontent.com/magisterphamtom/commandes-stream-deck/main/.github/banner.png"
+    }
+  ]
 }
