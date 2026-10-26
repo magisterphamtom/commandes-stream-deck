@@ -5,6 +5,12 @@
 Module Foundry VTT (v13 à v14.368) de magisterphamtom pour « Par-delà les Montagnes Hallucinées ».
 Chaque bouton du Stream Deck envoie un raccourci clavier (F13 à F24, seul ou avec Maj, Ctrl ou Alt). Foundry le reçoit et lance la macro « SD NN » correspondante. Gratuit, aucun plugin Stream Deck à installer : on utilise l'action **Raccourci clavier (Hotkey)** fournie avec le logiciel Elgato.
 
+## Aperçus
+
+<p align="center"><img src=".github/previews/stream-deck-boutons.png" alt="Boutons du Stream Deck" width="85%"></p>
+
+<p align="center"><img src=".github/previews/stream-deck-molettes.png" alt="Molettes du Stream Deck" width="85%"></p>
+
 ## Installation dans Foundry
 1. Activer le module « Commandes Stream Deck », puis F5.
 2. Au premier chargement, accepter « Créer les 44 macros ». Elles arrivent dans le dossier de macros **Stream Deck** (SD 01 à SD 44), avec leur icône.
