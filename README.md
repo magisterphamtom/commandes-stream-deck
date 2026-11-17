@@ -40,6 +40,26 @@ api.tool("basculeEpoque");                             // ouvre un outil de la b
 ```
 Les boutons 45 à 48 (Alt+F21 à Alt+F24) sont libres : créez une macro nommée « SD 45 · ce que vous voulez ».
 
+## Outils CoC7 (version 1.1)
+Le module gère maintenant **72 raccourcis**. Les boutons 49 à 59 lancent les outils CoC7 (Suivi du groupe, Bascule d'époque) ; leurs macros « SD NN » et leurs images sont créées automatiquement au chargement, sans toucher aux autres.
+
+| N° | Bouton | Raccourci | Icône |
+|---|---|---|---|
+| 45 | Lancer de groupe (créé par Roll Ensemble — CoC7) | Alt+F21 | `icons/SD45.png` |
+| 49 | Suivi du groupe | Ctrl+Maj+F13 | `icons/SD49.png` |
+| 50 | Chance | Ctrl+Maj+F14 | `icons/SD50.png` |
+| 51 | Santé mentale | Ctrl+Maj+F15 | `icons/SD51.png` |
+| 52 | Liens | Ctrl+Maj+F16 | `icons/SD52.png` |
+| 53 | Poursuite | Ctrl+Maj+F17 | `icons/SD53.png` |
+| 54 | Jauge de poursuite | Ctrl+Maj+F18 | `icons/SD54.png` |
+| 55 | Bascule d'époque | Ctrl+Maj+F19 | `icons/SD55.png` |
+| 56 | Passer en 1933 | Ctrl+Maj+F20 | `icons/SD56.png` |
+| 57 | Passer en 2025-2026 | Ctrl+Maj+F21 | `icons/SD57.png` |
+| 58 | Personnages par époque | Ctrl+Maj+F22 | `icons/SD58.png` |
+| 59 | Réglages des époques | Ctrl+Maj+F23 | `icons/SD59.png` |
+
+Libres : 46 à 48 (Alt+F22 à Alt+F24), 60 (Ctrl+Maj+F24) et 61 à 72 (Ctrl+Alt+F13 à F24) : créez une macro « SD NN · ce que vous voulez ».
+
 ## Disposition conseillée
 
 **Stream Deck XL (32 touches, 4 rangées de 8)**

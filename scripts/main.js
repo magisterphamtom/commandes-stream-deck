@@ -5,7 +5,7 @@
  * Le module fournit aussi des fonctions pratiques pour ces macros : musique, bruitages, arrêts, volume.
  */
 const ID = "commandes-stream-deck";
-const SLOTS = 48;
+const SLOTS = 72;
 
 function keyFor(i) {
   const M = foundry.helpers?.interaction?.KeyboardManager?.MODIFIER_KEYS ?? KeyboardManager.MODIFIER_KEYS;
@@ -13,19 +13,21 @@ function keyFor(i) {
   if (i <= 12) return { key: f(i), modifiers: [] };
   if (i <= 24) return { key: f(i - 12), modifiers: [M.SHIFT] };
   if (i <= 36) return { key: f(i - 24), modifiers: [M.CONTROL] };
-  return { key: f(i - 36), modifiers: [M.ALT] };
+  if (i <= 48) return { key: f(i - 36), modifiers: [M.ALT] };
+  if (i <= 60) return { key: f(i - 48), modifiers: [M.CONTROL, M.SHIFT] };
+  return { key: f(i - 60), modifiers: [M.CONTROL, M.ALT] };
 }
 
 function keyLabel(i) {
   const k = `F${12 + (((i - 1) % 12) + 1)}`;
-  return ["", "Maj+", "Ctrl+", "Alt+"][Math.floor((i - 1) / 12)] + k;
+  return ["", "Maj+", "Ctrl+", "Alt+", "Ctrl+Maj+", "Ctrl+Alt+"][Math.floor((i - 1) / 12)] + k;
 }
 
 Hooks.once("init", () => {
   game.settings.register(ID, "installed", { scope: "world", config: false, type: Boolean, default: false });
   game.settings.register(ID, "reinstall", {
     name: "Réinstaller les macros du Stream Deck",
-    hint: "Cochez puis enregistrez : recrée ou met à jour les 44 macros « SD NN » (dossier « Stream Deck »). Vos macros SD 45 à SD 48 ne sont pas touchées.",
+    hint: "Cochez puis enregistrez : recrée ou met à jour les macros « SD NN » du module (dossier « Stream Deck ») : musique et bruitages (1 à 44), outils CoC7 (49 à 59). Vos macros SD 45 à 48 et 60 à 72 ne sont pas touchées.",
     scope: "world", config: true, type: Boolean, default: false,
     onChange: async (v) => { if (!v || !game.user.isGM) return; await API.install(); await game.settings.set(ID, "reinstall", false); }
   });
@@ -47,7 +49,11 @@ Hooks.once("ready", async () => {
   if (mod) mod.api = API;
   if (!game.user.isGM) return;
   const done = game.settings.get(ID, "installed");
-  if (done || game.macros.some((m) => m.name.startsWith("SD 01"))) return;
+  if (done || game.macros.some((m) => m.name.startsWith("SD 01"))) {
+    // 1.1 : ajoute les nouvelles macros (outils CoC7, 49 à 59) sans modifier les autres
+    if (game.users.activeGM?.id === game.user.id) await API.install({ seulementManquantes: true });
+    return;
+  }
   const DialogV2 = foundry.applications.api.DialogV2;
   const ok = await DialogV2.confirm({
     window: { title: "Commandes Stream Deck" },
@@ -88,7 +94,7 @@ async function stopMusicExcept(keep) {
 
 const API = {
   /** Crée ou met à jour les macros « SD NN · … » à partir de layout.json. */
-  async install() {
+  async install({ seulementManquantes = false } = {}) {
     if (!game.user.isGM) return ui.notifications.warn("Réservé au Gardien.");
     const layout = await (await fetch(`modules/${ID}/layout.json`)).json();
     const folder = game.folders.find((f) => f.type === "Macro" && f.name === "Stream Deck")
@@ -108,6 +114,7 @@ const API = {
         case "next": command = `${A}.next();`; break;
         case "tool": command = `${A}.tool(${q(args[0])});`; break;
         case "vol": command = `${A}.volume(${q(args[0])}, ${args[1]});`; break;
+        case "api": command = `const mod = game.modules.get(${q(args[0])});\nif (!mod?.active) return ui.notifications.warn(${q(`Stream Deck : le module « ${args[0]} » n'est pas activé.`)});\nmod.api.${args[1]}(${args.length > 2 ? q(args[2]) : ""});`; break;
         default: continue;
       }
       const name = `SD ${nn} · ${label}`;
@@ -116,9 +123,10 @@ const API = {
         command: `// Stream Deck, bouton ${n} (${keyLabel(n)})\n${command}`
       };
       const existing = game.macros.find((m) => m.name.startsWith(`SD ${nn} `) || m.name === `SD ${nn}`);
+      if (existing && seulementManquantes) continue;
       if (existing) { await existing.update(data); updated++; } else { await Macro.create(data); created++; }
     }
-    ui.notifications.info(`Stream Deck : ${created} macro(s) créée(s), ${updated} mise(s) à jour (dossier « Stream Deck »).`);
+    if (created || updated) ui.notifications.info(`Stream Deck : ${created} macro(s) créée(s), ${updated} mise(s) à jour (dossier « Stream Deck »).`);
   },
 
   /** Lance une musique : un morceau précis, ou toute la playlist si soundName est omis. Coupe les autres musiques. */
